@@ -354,16 +354,16 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .radial {
   position: relative; overflow: hidden; border-radius: var(--r-lg);
   background: var(--bg-2); border: 1px solid var(--line); isolation: isolate;
-  height: clamp(360px, 64vh, 560px); perspective: 1400px;
+  height: clamp(420px, 66vh, 600px); perspective: 1400px;
 }
 .radial-glow {
-  position: absolute; left: 50%; top: 46%; z-index: 0; width: min(70%, 620px); aspect-ratio: 1; transform: translate(-50%, -50%);
-  background: radial-gradient(circle, color-mix(in srgb, var(--ink) 12%, transparent) 0%, transparent 62%); pointer-events: none;
+  position: absolute; left: 50%; top: 34%; z-index: 0; width: min(74%, 720px); aspect-ratio: 1; transform: translate(-50%, -50%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--ink) 13%, transparent) 0%, transparent 62%); pointer-events: none;
 }
 .radial-stage { position: absolute; inset: 0; z-index: 1; transform-style: preserve-3d; will-change: transform; }
 .rad-item {
   position: absolute; top: 50%; left: 50%; margin: 0;
-  width: clamp(176px, 25vw, 292px); aspect-ratio: 4 / 5;
+  width: clamp(168px, 26vw, 356px); aspect-ratio: 4 / 5;
   border-radius: var(--r-md); overflow: hidden; background: var(--tile);
   transform: translate(-50%, -50%); transform-origin: center center;
   box-shadow: 0 26px 50px -20px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
@@ -1915,8 +1915,8 @@ dialog.gal::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(8
       dotSpans = Array.prototype.slice.call(dotsWrap.children);
     }
 
-    var spread = 0.46;        // ângulo (rad) entre peças no arco (~26°)
-    var maxVisible = 3.4;     // até onde as peças aparecem antes de sumir
+    var step = 0.52;          // ângulo (rad) entre peças ao longo do arco (~30°)
+    var maxPhi = 1.9;         // além disso a peça some → mantém só o arco (metade)
     var lastActive = -1, ticking = false;
 
     function layout() {
@@ -1926,29 +1926,32 @@ dialog.gal::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(8
       // progresso 0..1 conforme a seção cruza a viewport → percorre todas as peças
       var p = Math.max(0, Math.min(1, (vh - rect.top) / (vh + rect.height)));
       var active = p * (N - 1);
-      var itemW = items[0].offsetWidth || 220;
-      var radiusX = Math.min(rect.width * 0.34, itemW * 1.18);
+
+      // raios do arco (meia-lua) — responsivos; centro do arco empurrado para baixo
+      var Rx = Math.min(rect.width * 0.4, 470);
+      var Ry = rect.height * 0.52;
+      var anchorY = rect.height * 0.30;
 
       for (var idx = 0; idx < N; idx++) {
         var it = items[idx];
-        var d = idx - active, ad = Math.abs(d);
-        var ang = d * spread;
-        var x = Math.sin(ang) * radiusX;
-        var depth = (Math.cos(ang) - 1) * 130;          // recua as laterais
-        var scale = (0.6 + 0.4 * Math.max(0, Math.cos(ang))) * (1 - Math.min(ad, 1) * 0.05);
-        var rotY = -Math.max(-1, Math.min(1, d)) * 26;   // leve giro 3D
-        var blur = Math.min(6, ad * 2.3);                // laterais desfocadas
-        var op = ad > maxVisible ? 0 : Math.max(0.1, 1 - ad * 0.26);
-        it.style.transform = 'translate(-50%,-50%) translate3d(' + x.toFixed(1) + 'px,0,' + depth.toFixed(1) + 'px) rotateY(' + rotY.toFixed(1) + 'deg) scale(' + scale.toFixed(3) + ')';
+        var off = idx - active;
+        var phi = off * step, aphi = Math.abs(phi);
+        var x = Math.sin(phi) * Rx;                       // laterais
+        var y = -Math.cos(phi) * Ry + anchorY;            // topo do arco no centro
+        var scale = 0.5 + 0.6 * Math.max(0, Math.cos(phi)); // grande no topo, menor nas pontas
+        var rot = phi * (180 / Math.PI) * 0.5;            // inclina seguindo a tangente do arco
+        var blur = Math.min(6, aphi * 3);                 // pontas desfocadas
+        var op = aphi > maxPhi ? 0 : Math.max(0, 1 - Math.pow(aphi / maxPhi, 1.7));
+        it.style.transform = 'translate(-50%,-50%) translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) rotate(' + rot.toFixed(2) + 'deg) scale(' + scale.toFixed(3) + ')';
         it.style.filter = 'blur(' + blur.toFixed(2) + 'px)';
         it.style.opacity = op.toFixed(3);
-        it.style.zIndex = String(100 - Math.round(ad * 10));
+        it.style.zIndex = String(100 - Math.round(aphi * 20));
       }
 
       // parallax vertical suave (desce/sobe conforme a seção passa)
       var center = rect.top + rect.height / 2;
-      var off = (center - vh / 2) / (vh / 2);
-      stage.style.transform = 'translateY(' + (off * 22).toFixed(1) + 'px)';
+      var off2 = (center - vh / 2) / (vh / 2);
+      stage.style.transform = 'translateY(' + (off2 * 20).toFixed(1) + 'px)';
 
       var ai = Math.max(0, Math.min(N - 1, Math.round(active)));
       if (ai !== lastActive) {
