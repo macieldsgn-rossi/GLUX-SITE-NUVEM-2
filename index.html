@@ -347,14 +347,14 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .empty strong { color: var(--ink); font-weight: 300; font-size: 26px; letter-spacing: -0.02em; }
 
 /* ---------- daily: vitrine radial (arco de meia-lua, largura total) ---------- */
-.daily { overflow: hidden; }
-.daily .wrap { display: flex; flex-direction: column; gap: 20px; padding-block: 16px 40px; }
-.daily .sec-head { text-align: center; align-items: center; display: flex; flex-direction: column; gap: 10px; }
+.daily { overflow: hidden; background: var(--bg); }
+.daily .wrap { position: relative; display: flex; flex-direction: column; gap: 24px; padding-block: 40px 32px; }
+.daily .sec-head { position: relative; z-index: 1; text-align: center; align-items: center; display: flex; flex-direction: column; gap: 10px; will-change: transform, opacity; }
 .daily .sec-head p { max-width: 46ch; margin-inline: auto; color: var(--muted); font-weight: 300; }
-/* área da animação: sem caixa, ocupando a largura total da viewport */
+/* área da animação: sem caixa, ocupa a largura total e sobe sobre o texto ao rolar */
 .radial {
-  position: relative; width: 100vw; margin-left: 50%; transform: translateX(-50%);
-  isolation: isolate; height: clamp(420px, 66vh, 620px); perspective: 1500px;
+  position: relative; z-index: 2; width: 100vw; margin-left: 50%; margin-top: -68px; transform: translateX(-50%);
+  isolation: isolate; height: clamp(440px, 68vh, 640px); perspective: 1500px;
 }
 .radial-glow {
   position: absolute; left: 50%; top: 34%; z-index: 0; width: min(70%, 820px); aspect-ratio: 1; transform: translate(-50%, -50%);
@@ -381,7 +381,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 
 /* ---------- how ---------- */
-.how { background: var(--bg-2); }
+.how { background: var(--bg); }
 .how .wrap { display: grid; gap: 40px; padding-block: 72px; }
 .how ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 28px; counter-reset: s; position: relative; }
 .how li { counter-increment: s; display: grid; grid-template-columns: 48px 1fr; gap: 6px 18px; position: relative; }
@@ -434,13 +434,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* ---------- footer ---------- */
 .site-foot { background: var(--panel); color: var(--panel-ink); }
-.site-foot .wrap { display: flex; flex-direction: column; gap: 48px; padding-block: 64px 36px; }
-.cta { display: flex; flex-direction: column; gap: 24px; }
-.cta h2 { font-size: clamp(2.25rem, 1.4rem + 3vw, 4rem); color: var(--panel-ink); }
-.cta p { color: var(--panel-muted); font-weight: 300; margin-top: 10px; }
-.btn-on-panel { background: var(--panel-ink); color: var(--panel); }
-.btn-on-panel:hover { background: #D9D9DE; }
-.foot-grid { display: grid; gap: 28px; padding-top: 32px; border-top: 1px solid var(--panel-line); }
+.site-foot .wrap { display: flex; flex-direction: column; gap: 28px; padding-block: 40px 28px; }
+.foot-grid { display: grid; gap: 28px; }
 .foot-brand { display: flex; align-items: center; gap: 12px; color: var(--panel-ink); }
 .foot-brand .m { width: 24px; height: 34px; }
 .foot-brand .w { width: 84px; height: 14.6px; }
@@ -451,9 +446,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .foot-col .mono { font-family: var(--mono); font-size: 13px; user-select: all; color: var(--panel-ink); }
 .foot-legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; font-size: 13px; color: var(--panel-muted); padding-top: 24px; border-top: 1px solid var(--panel-line); }
 @media (min-width: 760px) {
-  .cta { flex-direction: row; align-items: flex-end; justify-content: space-between; }
   .foot-grid { grid-template-columns: 2fr 1fr 1fr; }
-  .site-foot .wrap { padding-block: 104px 40px; gap: 72px; }
+  .site-foot .wrap { padding-block: 56px 32px; gap: 32px; }
 }
 
 /* ---------- fab / toast ---------- */
@@ -896,7 +890,7 @@ html.intro-on { --d: 1.35s; }
     .grid .prod.rv { animation-name: rv-card; animation-range: entry calc(var(--c, 0) * 6%) cover calc(28% + var(--c, 0) * 5%); }
     .grid .prod .tile .photo { animation: rv-img linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; }
     .rv:not(.prod):not(li):not(figure) { animation-range: entry 0% cover 30%; }
-    .sec-head h2, .cta h2 { animation: mask-up linear both; animation-timeline: view(); animation-range: entry 10% cover 30%; }
+    .sec-head h2 { animation: mask-up linear both; animation-timeline: view(); animation-range: entry 10% cover 30%; }
   }
 }
 
@@ -966,10 +960,10 @@ dialog.yay::backdrop { background: rgba(0, 0, 0, 0.84); -webkit-backdrop-filter:
 .site-foot { position: relative; overflow: hidden; isolation: isolate; }
 /* overscan (inset negativo) elimina o hairline de 1px nas bordas por arredondamento de subpixel */
 .foot-video { position: absolute; inset: -2px; z-index: -1; pointer-events: none; overflow: hidden; }
-.foot-video video { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; min-width: 100%; min-height: 100%; object-fit: cover; object-position: 50% 45%; display: block; }
+.foot-video video { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.2); width: 100%; height: 100%; min-width: 100%; min-height: 100%; object-fit: cover; object-position: 50% 45%; display: block; }
 /* scrim mais leve: o vídeo preenche e continua visível, com texto legível */
 .foot-video::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, 0.34) 0%, rgba(0, 0, 0, 0.44) 50%, rgba(0, 0, 0, 0.62) 100%); }
-.site-foot .cta h2, .site-foot .cta p, .site-foot .foot-brand, .site-foot .foot-col, .site-foot .foot-legal { text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); }
+.site-foot .foot-brand, .site-foot .foot-col, .site-foot .foot-legal { text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); }
 .site-foot .foot-legal, .site-foot .foot-grid { border-color: rgba(255, 255, 255, 0.16); }
 
 
@@ -1203,10 +1197,6 @@ dialog.gal::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(8
 <footer class="site-foot">
   <div class="foot-video" aria-hidden="true"><video id="foot-vid" muted loop playsinline autoplay preload="metadata" poster="media/duvida-poster.jpg"><source src="media/duvida.mp4" type="video/mp4"></video></div>
   <div class="wrap">
-    <div class="cta rv">
-      <div><h2>Ficou com alguma <b>dúvida?</b></h2><p>A gente responde pelo WhatsApp.</p></div>
-      <a class="btn btn-on-panel js-wa" href="#" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-wa"></use></svg>Falar no WhatsApp<svg class="ico ico-arrow" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
-    </div>
     <div class="foot-grid">
       <div class="foot-col">
         <div class="foot-brand"><svg class="mark m" aria-hidden="true"><use href="#g-mark"></use></svg><svg class="mark w" aria-label="Glux" role="img"><use href="#g-word"></use></svg></div>
@@ -1887,6 +1877,7 @@ dialog.gal::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(8
     // sem animação: cai para uma grade estática legível
     if (reduced) { radial.classList.add('static'); return; }
 
+    var secHead = radial.parentNode.querySelector('.sec-head');
     var step = 0.52;          // ângulo (rad) entre peças ao longo do arco (~30°)
     var maxPhi = 1.9;         // além disso a peça some → mantém só o arco (metade)
     var ticking = false;
@@ -1901,29 +1892,35 @@ dialog.gal::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(8
 
       // raios do arco (meia-lua) — as peças ocupam a largura total do container
       var Rx = Math.min(rect.width * 0.36, 720);
-      var Ry = rect.height * 0.46;
-      var anchorY = rect.height * 0.36;
+      var Ry = rect.height * 0.44;
+      var anchorY = rect.height * 0.34;
 
       for (var idx = 0; idx < N; idx++) {
         var it = items[idx];
         var off = idx - active;
         var phi = off * step, aphi = Math.abs(phi);
+        var depth = Math.max(0, Math.cos(phi));           // 1 no centro, 0 nas pontas
         var x = Math.sin(phi) * Rx;                       // laterais
         var y = -Math.cos(phi) * Ry + anchorY;            // topo do arco no centro
-        var scale = 0.5 + 0.6 * Math.max(0, Math.cos(phi)); // grande no topo, menor nas pontas
+        var z = (depth - 1) * 300;                        // profundidade real: centro à frente, pontas recuam
+        var scale = 0.42 + 0.72 * depth;                  // escala dramática: grande no topo, pequena nas pontas
         var rot = phi * (180 / Math.PI) * 0.5;            // inclina seguindo a tangente do arco
-        var blur = Math.min(6, aphi * 3);                 // pontas desfocadas
+        var blur = Math.min(7, aphi * 3.2);               // pontas desfocadas
+        var bright = 0.5 + 0.5 * depth;                   // pontas mais escuras → reforça a profundidade
         var op = aphi > maxPhi ? 0 : Math.max(0, 1 - Math.pow(aphi / maxPhi, 1.7));
-        it.style.transform = 'translate(-50%,-50%) translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) rotate(' + rot.toFixed(2) + 'deg) scale(' + scale.toFixed(3) + ')';
-        it.style.filter = 'blur(' + blur.toFixed(2) + 'px)';
+        it.style.transform = 'translate(-50%,-50%) translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,' + z.toFixed(1) + 'px) rotate(' + rot.toFixed(2) + 'deg) scale(' + scale.toFixed(3) + ')';
+        it.style.filter = 'blur(' + blur.toFixed(2) + 'px) brightness(' + bright.toFixed(2) + ')';
         it.style.opacity = op.toFixed(3);
         it.style.zIndex = String(100 - Math.round(aphi * 20));
       }
 
-      // parallax vertical suave (desce/sobe conforme a seção passa)
-      var center = rect.top + rect.height / 2;
-      var off2 = (center - vh / 2) / (vh / 2);
-      stage.style.transform = 'translateY(' + (off2 * 20).toFixed(1) + 'px)';
+      // parallax: o arco sobe ao rolar e o texto (mais lento) fica por trás dele
+      var lift = (0.34 - p) * 300;                        // início: arco mais baixo (espaço); ao descer: sobe e cobre
+      stage.style.transform = 'translateY(' + lift.toFixed(1) + 'px)';
+      if (secHead) {
+        secHead.style.transform = 'translateY(' + (p * -46).toFixed(1) + 'px)';
+        secHead.style.opacity = Math.max(0, 1 - Math.max(0, p - 0.42) * 2.3).toFixed(3);
+      }
     }
     function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(layout); } }
 
