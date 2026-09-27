@@ -346,48 +346,37 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .empty { padding: 56px 0; text-align: center; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .empty strong { color: var(--ink); font-weight: 300; font-size: 26px; letter-spacing: -0.02em; }
 
-/* ---------- daily: vitrine radial (coverflow) ---------- */
+/* ---------- daily: vitrine radial (arco de meia-lua, largura total) ---------- */
 .daily { overflow: hidden; }
-.daily .wrap { display: flex; flex-direction: column; gap: 28px; padding-block: 16px 72px; }
+.daily .wrap { display: flex; flex-direction: column; gap: 20px; padding-block: 16px 40px; }
 .daily .sec-head { text-align: center; align-items: center; display: flex; flex-direction: column; gap: 10px; }
 .daily .sec-head p { max-width: 46ch; margin-inline: auto; color: var(--muted); font-weight: 300; }
+/* área da animação: sem caixa, ocupando a largura total da viewport */
 .radial {
-  position: relative; overflow: hidden; border-radius: var(--r-lg);
-  background: var(--bg-2); border: 1px solid var(--line); isolation: isolate;
-  height: clamp(420px, 66vh, 600px); perspective: 1400px;
+  position: relative; width: 100vw; margin-left: 50%; transform: translateX(-50%);
+  isolation: isolate; height: clamp(420px, 66vh, 620px); perspective: 1500px;
 }
 .radial-glow {
-  position: absolute; left: 50%; top: 34%; z-index: 0; width: min(74%, 720px); aspect-ratio: 1; transform: translate(-50%, -50%);
-  background: radial-gradient(circle, color-mix(in srgb, var(--ink) 13%, transparent) 0%, transparent 62%); pointer-events: none;
+  position: absolute; left: 50%; top: 34%; z-index: 0; width: min(70%, 820px); aspect-ratio: 1; transform: translate(-50%, -50%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--ink) 10%, transparent) 0%, transparent 64%); pointer-events: none;
 }
 .radial-stage { position: absolute; inset: 0; z-index: 1; transform-style: preserve-3d; will-change: transform; }
 .rad-item {
   position: absolute; top: 50%; left: 50%; margin: 0;
-  width: clamp(168px, 26vw, 356px); aspect-ratio: 4 / 5;
+  width: clamp(176px, 27vw, 380px); aspect-ratio: 4 / 5;
   border-radius: var(--r-md); overflow: hidden; background: var(--tile);
   transform: translate(-50%, -50%); transform-origin: center center;
   box-shadow: 0 26px 50px -20px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   will-change: transform, filter, opacity;
 }
 .rad-item img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.rad-tag {
-  position: absolute; left: 10px; bottom: 10px; padding: 5px 11px; border-radius: var(--pill); font-size: 12px; font-weight: 500;
-  background: rgba(255, 255, 255, 0.16); color: #FFFFFF; -webkit-backdrop-filter: blur(14px) saturate(190%); backdrop-filter: blur(14px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.32); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 6px 8px -6px rgba(0, 0, 0, 0.35);
-  opacity: 0; transition: opacity .4s var(--ease);
-}
-.rad-item.is-active .rad-tag { opacity: 1; }
-.radial-dots { position: absolute; left: 50%; bottom: 16px; z-index: 3; transform: translateX(-50%); display: flex; gap: 7px; pointer-events: none; }
-.radial-dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--ink); opacity: .22; transition: opacity .35s var(--ease), transform .35s var(--ease); }
-.radial-dots span.on { opacity: .85; transform: scale(1.35); }
 /* fallback estático (sem JS / reduced motion): grade simples de peças */
-.radial.static .radial-stage { position: static; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; perspective: none; }
-.radial.static { height: auto; }
+.radial.static { height: auto; width: 100%; margin-left: 0; transform: none; }
+.radial.static .radial-stage { position: static; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; perspective: none; }
 .radial.static .rad-item { position: static; width: auto; transform: none; box-shadow: none; filter: none !important; opacity: 1 !important; }
-.radial.static .rad-tag { opacity: 1; }
-.radial.static .radial-glow, .radial.static .radial-dots { display: none; }
+.radial.static .radial-glow { display: none; }
 @media (min-width: 760px) {
-  .daily .wrap { padding-block: 24px 112px; gap: 36px; }
+  .daily .wrap { padding-block: 24px 64px; gap: 28px; }
   .radial.static .radial-stage { grid-template-columns: repeat(3, 1fr); }
 }
 
@@ -977,34 +966,27 @@ dialog.yay::backdrop { background: rgba(0, 0, 0, 0.84); -webkit-backdrop-filter:
 .site-foot { position: relative; overflow: hidden; isolation: isolate; }
 /* overscan (inset negativo) elimina o hairline de 1px nas bordas por arredondamento de subpixel */
 .foot-video { position: absolute; inset: -2px; z-index: -1; pointer-events: none; overflow: hidden; }
-.foot-video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; display: block; }
-.foot-video::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, 0.58) 0%, rgba(0, 0, 0, 0.7) 45%, rgba(0, 0, 0, 0.9) 100%); }
+.foot-video video { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; min-width: 100%; min-height: 100%; object-fit: cover; object-position: 50% 45%; display: block; }
+/* scrim mais leve: o vídeo preenche e continua visível, com texto legível */
+.foot-video::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, 0.34) 0%, rgba(0, 0, 0, 0.44) 50%, rgba(0, 0, 0, 0.62) 100%); }
+.site-foot .cta h2, .site-foot .cta p, .site-foot .foot-brand, .site-foot .foot-col, .site-foot .foot-legal { text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); }
 .site-foot .foot-legal, .site-foot .foot-grid { border-color: rgba(255, 255, 255, 0.16); }
 
 
-/* hero v8: single centered column + refined action buttons */
+/* hero v8: single centered column + two side-by-side buttons */
 .hero .wrap { max-width: 760px; margin-inline: auto; text-align: center; }
 .hero .bio { align-items: center !important; text-align: center !important; justify-content: center; padding-block: 24px 8px; }
 .hero .bio h1 { max-width: 20ch; }
-.hero .links { max-width: 480px; margin-inline: auto; }
-.hero .links .link { min-height: 52px; padding: 0 14px 0 18px; font-size: 14.5px; color: var(--ink); border-color: var(--line-2); background: var(--bg-2); }
+.hero .links { display: flex; flex-direction: row; flex-wrap: nowrap; gap: 12px; max-width: 520px; margin-inline: auto; }
+.hero .links .link { flex: 1 1 0; min-width: 0; min-height: 56px; padding: 0 14px; justify-content: center; font-size: 15px; color: var(--ink); border-color: var(--line-2); background: var(--bg-2); }
+.hero .links .link > span:first-child { min-width: 0; }
+.hero .links .link > span:first-child { justify-content: center; }
+.hero .links .link .go { display: none; }
 .hero .links .link:not(.primary) .ico { opacity: .9; color: var(--ink-2); }
 .hero .links .link:not(.primary):hover { border-color: var(--ink); color: var(--ink); }
 .hero .links .link:not(.primary):hover .ico { color: var(--ink); }
-.hero .links .link.primary { min-height: 58px; font-size: 15px; color: var(--on-btn); background: var(--btn); }
+.hero .links .link.primary { color: var(--on-btn); background: var(--btn); }
 .hero .links .link.primary .ico { opacity: 1; }
-.hero .links .link.primary .go { color: var(--on-btn); }
-/* desktop: primary full-width, 3 tidy action cards below */
-@media (min-width: 720px) {
-  .hero .links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; max-width: 700px; }
-  .hero .links .link.primary { grid-column: 1 / -1; }
-  .hero .links .link:not(.primary) {
-    min-height: 104px; padding: 16px 12px; flex-direction: column; justify-content: center; text-align: center; gap: 0;
-  }
-  .hero .links .link:not(.primary) > span:first-child { flex-direction: column; gap: 10px; line-height: 1.25; }
-  .hero .links .link:not(.primary) .ico { width: 22px; height: 22px; }
-  .hero .links .link:not(.primary) .go { display: none; }
-}
 @media (min-width: 960px) {
   .hero .wrap { grid-template-columns: minmax(0, 1fr) !important; gap: 28px !important; padding-block: 72px 64px !important; }
   .hero .bio { align-items: center !important; text-align: center !important; }
@@ -1139,9 +1121,7 @@ dialog.gal::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(8
         <h1 class="type-h" style="--i: 0" aria-label="Ouro 18K para quem não passa despercebido."><span class="th-inner" aria-hidden="true"><span class="th-fixed">Ouro 18K para quem</span><span class="th-dyn"><b class="typed" id="typed">não passa despercebido.</b><span class="caret"></span></span></span></h1>
         <nav class="links" aria-label="Links principais" style="--i: 1" id="hero-links">
           <a class="link primary js-wa" href="#" target="_blank" rel="noopener"><span><svg class="ico" aria-hidden="true"><use href="#i-wa"></use></svg>Falar no WhatsApp</span><span class="go"><svg class="ico" aria-hidden="true"><use href="#i-arrow"></use></svg></span></a>
-          <a class="link" href="#catalogo"><span><svg class="ico" aria-hidden="true"><use href="#i-gem"></use></svg>Ver catálogo</span><span class="go"><svg class="ico" aria-hidden="true"><use href="#i-arrow"></use></svg></span></a>
           <a class="link" href="https://www.instagram.com/glux.oficial" target="_blank" rel="noopener"><span><svg class="ico" aria-hidden="true"><use href="#i-ig"></use></svg>Instagram</span><span class="go"><svg class="ico" aria-hidden="true"><use href="#i-arrow-ur"></use></svg></span></a>
-          <a class="link" href="#duvidas" data-open-faq="f4"><span><svg class="ico" aria-hidden="true"><use href="#i-spark"></use></svg>Cuidados com suas joias</span><span class="go"><svg class="ico" aria-hidden="true"><use href="#i-arrow"></use></svg></span></a>
         </nav>
       </div>
     </div>
@@ -1179,17 +1159,16 @@ dialog.gal::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(8
       <div class="radial" id="radial" role="group" aria-label="Vitrine de peças Glux">
         <span class="radial-glow" aria-hidden="true"></span>
         <div class="radial-stage" id="radial-stage">
-          <figure class="rad-item"><img src="produtos/colar-cuban-pantera.webp" alt="Colar Cuban Pantera banhado a ouro 18K" loading="lazy" decoding="async"><figcaption class="rad-tag">Colar Cuban Pantera</figcaption></figure>
-          <figure class="rad-item"><img src="produtos/bracelete-grumet-athos.webp" alt="Bracelete Grumet Athos banhado a ouro 18K" loading="lazy" decoding="async"><figcaption class="rad-tag">Bracelete Grumet Athos</figcaption></figure>
-          <figure class="rad-item"><img src="produtos/kit-cartier-duo.webp" alt="Kit Cartier Duo banhado a ouro 18K" loading="lazy" decoding="async"><figcaption class="rad-tag">Kit Cartier Duo</figcaption></figure>
-          <figure class="rad-item"><img src="produtos/colar-grumet-sevilha.webp" alt="Colar Grumet Sevilha banhado a ouro 18K" loading="lazy" decoding="async"><figcaption class="rad-tag">Colar Grumet Sevilha</figcaption></figure>
-          <figure class="rad-item"><img src="produtos/bracelete-cartier-king.webp" alt="Bracelete Cartier King banhado a ouro 18K" loading="lazy" decoding="async"><figcaption class="rad-tag">Bracelete Cartier King</figcaption></figure>
-          <figure class="rad-item"><img src="produtos/colar-cadeado-veneza.webp" alt="Colar Cadeado Veneza banhado a ouro 18K" loading="lazy" decoding="async"><figcaption class="rad-tag">Colar Cadeado Veneza</figcaption></figure>
-          <figure class="rad-item"><img src="produtos/bracelete-cuban-miami.webp" alt="Bracelete Cuban Miami banhado a ouro 18K" loading="lazy" decoding="async"><figcaption class="rad-tag">Bracelete Cuban Miami</figcaption></figure>
-          <figure class="rad-item"><img src="produtos/kit-napoli.webp" alt="Kit Napoli banhado a ouro 18K" loading="lazy" decoding="async"><figcaption class="rad-tag">Kit Napoli</figcaption></figure>
-          <figure class="rad-item"><img src="produtos/colar-espiga-firenze.webp" alt="Colar Espiga Firenze banhado a ouro 18K" loading="lazy" decoding="async"><figcaption class="rad-tag">Colar Espiga Firenze</figcaption></figure>
+          <figure class="rad-item"><img src="produtos/colar-cuban-pantera.webp" alt="Colar Cuban Pantera banhado a ouro 18K" loading="lazy" decoding="async"></figure>
+          <figure class="rad-item"><img src="produtos/bracelete-grumet-athos.webp" alt="Bracelete Grumet Athos banhado a ouro 18K" loading="lazy" decoding="async"></figure>
+          <figure class="rad-item"><img src="produtos/kit-cartier-duo.webp" alt="Kit Cartier Duo banhado a ouro 18K" loading="lazy" decoding="async"></figure>
+          <figure class="rad-item"><img src="produtos/colar-grumet-sevilha.webp" alt="Colar Grumet Sevilha banhado a ouro 18K" loading="lazy" decoding="async"></figure>
+          <figure class="rad-item"><img src="produtos/bracelete-cartier-king.webp" alt="Bracelete Cartier King banhado a ouro 18K" loading="lazy" decoding="async"></figure>
+          <figure class="rad-item"><img src="produtos/colar-cadeado-veneza.webp" alt="Colar Cadeado Veneza banhado a ouro 18K" loading="lazy" decoding="async"></figure>
+          <figure class="rad-item"><img src="produtos/bracelete-cuban-miami.webp" alt="Bracelete Cuban Miami banhado a ouro 18K" loading="lazy" decoding="async"></figure>
+          <figure class="rad-item"><img src="produtos/kit-napoli.webp" alt="Kit Napoli banhado a ouro 18K" loading="lazy" decoding="async"></figure>
+          <figure class="rad-item"><img src="produtos/colar-espiga-firenze.webp" alt="Colar Espiga Firenze banhado a ouro 18K" loading="lazy" decoding="async"></figure>
         </div>
-        <div class="radial-dots" id="radial-dots" aria-hidden="true"></div>
       </div>
     </div>
   </section>
@@ -1906,18 +1885,11 @@ dialog.gal::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(8
     var N = items.length; if (!N) return;
 
     // sem animação: cai para uma grade estática legível
-    if (reduced) { radial.classList.add('static'); items.forEach(function (it) { it.classList.add('is-active'); }); return; }
-
-    // pontos indicadores
-    var dotsWrap = $('radial-dots'), dotSpans = [];
-    if (dotsWrap) {
-      dotsWrap.innerHTML = items.map(function () { return '<span></span>'; }).join('');
-      dotSpans = Array.prototype.slice.call(dotsWrap.children);
-    }
+    if (reduced) { radial.classList.add('static'); return; }
 
     var step = 0.52;          // ângulo (rad) entre peças ao longo do arco (~30°)
     var maxPhi = 1.9;         // além disso a peça some → mantém só o arco (metade)
-    var lastActive = -1, ticking = false;
+    var ticking = false;
 
     function layout() {
       ticking = false;
@@ -1927,10 +1899,10 @@ dialog.gal::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(8
       var p = Math.max(0, Math.min(1, (vh - rect.top) / (vh + rect.height)));
       var active = p * (N - 1);
 
-      // raios do arco (meia-lua) — responsivos; centro do arco empurrado para baixo
-      var Rx = Math.min(rect.width * 0.4, 470);
-      var Ry = rect.height * 0.52;
-      var anchorY = rect.height * 0.30;
+      // raios do arco (meia-lua) — as peças ocupam a largura total do container
+      var Rx = Math.min(rect.width * 0.36, 720);
+      var Ry = rect.height * 0.46;
+      var anchorY = rect.height * 0.36;
 
       for (var idx = 0; idx < N; idx++) {
         var it = items[idx];
@@ -1952,13 +1924,6 @@ dialog.gal::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(8
       var center = rect.top + rect.height / 2;
       var off2 = (center - vh / 2) / (vh / 2);
       stage.style.transform = 'translateY(' + (off2 * 20).toFixed(1) + 'px)';
-
-      var ai = Math.max(0, Math.min(N - 1, Math.round(active)));
-      if (ai !== lastActive) {
-        items.forEach(function (it, k) { it.classList.toggle('is-active', k === ai); });
-        if (dotSpans.length) dotSpans.forEach(function (s, k) { s.classList.toggle('on', k === ai); });
-        lastActive = ai;
-      }
     }
     function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(layout); } }
 
