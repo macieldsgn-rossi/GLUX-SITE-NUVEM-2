@@ -1487,7 +1487,7 @@ dialog.gal::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(8
 
   // feature spotlight + parallax
   var feat = $('feature');
-  if (window.matchMedia('(hover: hover)').matches && !reduced) {
+  if (feat && window.matchMedia('(hover: hover)').matches && !reduced) {
     feat.addEventListener('pointermove', function (e) {
       var r = feat.getBoundingClientRect();
       var x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
