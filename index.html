@@ -348,12 +348,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* ---------- daily: vitrine radial (arco de meia-lua, largura total) ---------- */
 .daily { overflow: hidden; background: var(--bg); }
-.daily .wrap { position: relative; display: flex; flex-direction: column; gap: 24px; padding-block: 40px 32px; }
-.daily .sec-head { position: relative; z-index: 1; text-align: center; align-items: center; display: flex; flex-direction: column; gap: 10px; will-change: transform, opacity; }
-.daily .sec-head p { max-width: 46ch; margin-inline: auto; color: var(--muted); font-weight: 300; }
-/* área da animação: sem caixa, ocupa a largura total e sobe sobre o texto ao rolar */
+.daily .wrap { position: relative; display: flex; flex-direction: column; padding-block: 24px; }
+/* área da animação: sem caixa, ocupa a largura total da viewport */
 .radial {
-  position: relative; z-index: 2; width: 100vw; margin-left: 50%; margin-top: -68px; transform: translateX(-50%);
+  position: relative; z-index: 2; width: 100vw; margin-left: 50%; transform: translateX(-50%);
   isolation: isolate; height: clamp(440px, 68vh, 640px); perspective: 1500px;
 }
 .radial-glow {
@@ -1147,9 +1145,8 @@ dialog.gal::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(8
     </div>
   </section>
 
-  <section class="daily" id="daily" aria-labelledby="daily-h">
+  <section class="daily" id="daily" aria-label="Vitrine de peças Glux">
     <div class="wrap">
-      <div class="sec-head rv"><h2 id="daily-h">No dia a <b>dia</b></h2><p>Peças de presença, feitas para acompanhar o preto, o branco e o seu estilo. Role a página para percorrer a vitrine.</p></div>
       <div class="radial" id="radial" role="group" aria-label="Vitrine de peças Glux">
         <span class="radial-glow" aria-hidden="true"></span>
         <div class="radial-stage" id="radial-stage">
@@ -1877,7 +1874,6 @@ dialog.gal::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(8
     // sem animação: cai para uma grade estática legível
     if (reduced) { radial.classList.add('static'); return; }
 
-    var secHead = radial.parentNode.querySelector('.sec-head');
     var step = 0.52;          // ângulo (rad) entre peças ao longo do arco (~30°)
     var maxPhi = 1.9;         // além disso a peça some → mantém só o arco (metade)
     var ticking = false;
@@ -1914,13 +1910,9 @@ dialog.gal::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(8
         it.style.zIndex = String(100 - Math.round(aphi * 20));
       }
 
-      // parallax: o arco sobe ao rolar e o texto (mais lento) fica por trás dele
-      var lift = (0.34 - p) * 300;                        // início: arco mais baixo (espaço); ao descer: sobe e cobre
+      // parallax vertical sutil: o arco desce/sobe conforme a seção cruza a viewport
+      var lift = (0.5 - p) * 130;
       stage.style.transform = 'translateY(' + lift.toFixed(1) + 'px)';
-      if (secHead) {
-        secHead.style.transform = 'translateY(' + (p * -46).toFixed(1) + 'px)';
-        secHead.style.opacity = Math.max(0, 1 - Math.max(0, p - 0.42) * 2.3).toFixed(3);
-      }
     }
     function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(layout); } }
 
